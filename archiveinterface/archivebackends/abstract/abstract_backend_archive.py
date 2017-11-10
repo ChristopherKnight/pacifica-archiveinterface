@@ -76,6 +76,14 @@ class AbstractBackendArchive(object):
         pass
 
     @abc.abstractmethod
+    def patch(self):
+        """Return status of moving of file.
+
+        Method that moves a file on the archive from one location to another
+        """
+        pass
+
+    @abc.abstractmethod
     def set_mod_time(self, mod_time):
         """Set Modification Time for File.
 

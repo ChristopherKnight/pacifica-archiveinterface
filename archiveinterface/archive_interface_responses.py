@@ -41,6 +41,15 @@ class Responses(object):
         }
         return self._response
 
+    def file_patch(self, start_response, test):
+        """Response on a successful put."""
+        start_response('200 OK', [('Content-Type', 'application/json')])
+        self._response = {
+            'message': 'File being patched,
+            'filepath': test
+        }
+        return self._response
+
     def archive_working_response(self, start_response):
         """Response when doing a get on /."""
         start_response('200 OK', [('Content-Type', 'application/json')])

@@ -114,3 +114,12 @@ class PosixBackendArchive(AbstractBackendArchive):
         except Exception as ex:
             err_str = "Can't get posix file status with error: " + str(ex)
             raise ArchiveInterfaceError(err_str)
+
+    def patch(self):
+        """Move a posix file."""
+        try:
+            if self._file:
+                return self._file.status()
+        except Exception as ex:
+            err_str = "Can't get posix file status with error: " + str(ex)
+            raise ArchiveInterfaceError(err_str)

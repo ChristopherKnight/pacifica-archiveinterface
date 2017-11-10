@@ -107,6 +107,19 @@ class ArchiveInterfaceGenerator(object):
         archivefile.close()
         return self.return_response()
 
+    def patch(self, env, start_response):
+        """Move a file from the original path to the new one specified
+        """
+        archivefile = None
+        path_info = env['PATH_INFO']
+        resp = interface_responses.Responses()
+        stderr.flush()
+        #archivefile = self._archive.open(path_info, 'r')
+        #patch = archivefile.patch()
+        self._response = resp.file_patch(start_response, path_info)
+        #archivefile.close()
+        return self.return_response()
+
     def return_response(self):
         """Print all responses in a nice fashion."""
         return dumps(self._response, sort_keys=True, indent=4)
@@ -122,6 +135,8 @@ class ArchiveInterfaceGenerator(object):
                 return self.status(env, start_response)
             elif env['REQUEST_METHOD'] == 'POST':
                 return self.stage(env, start_response)
+            elif env['REQUEST_METHOD'] == 'PATCH':
+                return self.patch(env, start_response)
             resp = interface_responses.Responses()
             self._response = resp.unknown_request(start_response,
                                                   env['REQUEST_METHOD'])
