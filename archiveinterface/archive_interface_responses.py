@@ -41,12 +41,11 @@ class Responses(object):
         }
         return self._response
 
-    def file_patch(self, start_response, test):
+    def file_patch(self, start_response):
         """Response on a successful put."""
         start_response('200 OK', [('Content-Type', 'application/json')])
         self._response = {
-            'message': 'File being patched',
-            'response': test
+            'message': 'File Moved Successfully',
         }
         return self._response
 
