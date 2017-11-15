@@ -45,7 +45,7 @@ class Responses(object):
         """Response on a successful put."""
         start_response('200 OK', [('Content-Type', 'application/json')])
         self._response = {
-            'message': 'File being patched'
+            'message': 'File being patched',
             'response': test
         }
         return self._response
