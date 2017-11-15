@@ -131,7 +131,7 @@ class ArchiveInterfaceGenerator(object):
             return self.return_response()
         stderr.flush()
         patch = self._archive.patch(file_id, file_path)
-        self._response = resp.file_patch(start_response, patch)
+        self._response = resp.file_patch(start_response)
         return self.return_response()
 
     def return_response(self):
