@@ -3,7 +3,7 @@
 
 Allows API to file interactions for passed in archive backends.
 """
-from json import dumps
+import json
 from sys import stderr
 from archiveinterface.archive_utils import get_http_modified_time
 from archiveinterface.archive_interface_error import ArchiveInterfaceError
@@ -111,18 +111,33 @@ class ArchiveInterfaceGenerator(object):
         """Move a file from the original path to the new one specified
         """
         archivefile = None
-        path_info = env['PATH_INFO']
         resp = interface_responses.Responses()
+        try:
+            request_body_size = int(env.get('CONTENT_LENGTH', 0))
+        except ValueError:
+            request_body_size = 0
+
+        try:
+            request_body = env['wsgi.input'].read(request_body_size)
+            data = json.loads(request_body)
+            file_info = data['file']
+            file_id = file_info['id']
+            file_path = file_info['path']
+        except IOError:
+            # is exception is probably from the read()
+            self._response = resp.json_patch_error_response(start_response)
+            return self.return_response()
+        except ValueError:
+            self._response = resp.json_patch_error_response(start_response)
+            return self.return_response()
         stderr.flush()
-        #archivefile = self._archive.open(path_info, 'r')
-        #patch = archivefile.patch()
-        self._response = resp.file_patch(start_response, path_info)
-        #archivefile.close()
+        patch = self._archive.patch(file_id, file_path)
+        self._response = resp.file_patch(start_response, patch)
         return self.return_response()
 
     def return_response(self):
         """Print all responses in a nice fashion."""
-        return dumps(self._response, sort_keys=True, indent=4)
+        return json.dumps(self._response, sort_keys=True, indent=4)
 
     def pacifica_archiveinterface(self, env, start_response):
         """Parse request method type."""
