@@ -116,21 +116,19 @@ class PosixBackendArchive(AbstractBackendArchive):
             err_str = "Can't get posix file status with error: " + str(ex)
             raise ArchiveInterfaceError(err_str)
 
-    def patch(self, file_id, path):
+    def patch(self, file_id, old_path):
         """Move a posix file."""
         try:
-            fpath = un_abs_path(path)
-            old_filepath = os.path.join(self._prefix, fpath)
             if read_config_value('posix', 'use_id2filename') == 'true':
-                fpath2 = un_abs_path(id2filename(int(file_id)))
+                fpath = un_abs_path(id2filename(int(file_id)))
             else:
-                fpath2 = un_abs_path(file_id)
-            new_filepath = os.path.join(self._prefix, fpath2)
+                fpath = un_abs_path(file_id)
+            new_filepath = os.path.join(self._prefix, fpath)
             new_directories = os.path.dirname(new_filepath)
             if not os.path.exists(new_directories):
                 os.makedirs(new_directories)
 
-            shutil.move(old_filepath, new_filepath)
+            shutil.move(old_path, new_filepath)
         except Exception as ex:
             err_str = "Can't move posix file with error: " + str(ex)
             raise ArchiveInterfaceError(err_str)

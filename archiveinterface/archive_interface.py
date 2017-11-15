@@ -120,9 +120,8 @@ class ArchiveInterfaceGenerator(object):
         try:
             request_body = env['wsgi.input'].read(request_body_size)
             data = json.loads(request_body)
-            file_info = data['file']
-            file_id = file_info['id']
-            file_path = file_info['path']
+            file_path = data['path']
+            file_id = env['PATH_INFO']
         except IOError:
             # is exception is probably from the read()
             self._response = resp.json_patch_error_response(start_response)
