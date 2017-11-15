@@ -41,7 +41,7 @@ class PosixBackendArchive(AbstractBackendArchive):
             raise ArchiveInterfaceError(err_str)
         try:
             if read_config_value('posix', 'use_id2filename') == 'true':
-                fpath = un_abs_path(id2filename(int(filepath)))
+                fpath = un_abs_path(id2filename(int(un_abs_path(filepath))))
             else:
                 fpath = un_abs_path(filepath)
             filename = os.path.join(self._prefix, fpath)
@@ -120,7 +120,7 @@ class PosixBackendArchive(AbstractBackendArchive):
         """Move a posix file."""
         try:
             if read_config_value('posix', 'use_id2filename') == 'true':
-                fpath = un_abs_path(id2filename(int(file_id)))
+                fpath = un_abs_path(id2filename(int(un_abs_path(file_id))))
             else:
                 fpath = un_abs_path(file_id)
             new_filepath = os.path.join(self._prefix, fpath)
