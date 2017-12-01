@@ -5,6 +5,7 @@ Module that implements the abstract_backend_archive class for a HMS Sideband
 backend.
 """
 import os
+import shutil
 from archiveinterface.archive_utils import un_abs_path, read_config_value
 from archiveinterface.archive_interface_error import ArchiveInterfaceError
 from archiveinterface.archivebackends.oracle_hms_sideband.extended_hms_sideband import (
@@ -121,4 +122,18 @@ class HmsSidebandBackendArchive(AbstractBackendArchive):
                 return self._file.status()
         except Exception as ex:
             err_str = "Can't get HMS Sideband file status with error: " + str(ex)
+            raise ArchiveInterfaceError(err_str)
+
+    def patch(self, file_id, old_path):
+        """Move a hms file."""
+        try:
+            fpath = un_abs_path(file_id)
+            new_filepath = os.path.join(self._prefix, path_info_munge(fpath))
+            new_directories = os.path.dirname(new_filepath)
+            if not os.path.exists(new_directories):
+                os.makedirs(new_directories)
+
+            shutil.move(old_path, new_filepath)
+        except Exception as ex:
+            err_str = "Can't move posix file with error: " + str(ex)
             raise ArchiveInterfaceError(err_str)
